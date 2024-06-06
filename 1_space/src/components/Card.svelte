@@ -27,22 +27,22 @@
           <div class="rocket-info">Solar system exploration</div>
   
           <div class="stat-icon">year built</div>
-          <div class="stat-value" on:click={() => logValue('1977')}>1977</div>
+         <div class="stat-value" on:click={() => logValue(rocket.year_built)}>{rocket.year_built}</div>
   
           <div class="stat-icon">mission duration</div>
-          <div class="stat-value" on:click={() => logValue('19000')}>19000</div>
+          <div class="stat-value" on:click={() => logValue(rocket.mission_duration)}>{rocket.mission_duration}</div>
   
           <div class="stat-icon">max speed</div>
-          <div class="stat-value" on:click={() => logValue('62000')}>62000</div>
+          <div class="stat-value" on:click={() => logValue(rocket.max_speed)}>{rocket.max_speed}</div>
   
           <div class="stat-icon">max earth distance</div>
-          <div class="stat-value" on:click={() => logValue('22286000')}>22286000</div>
+          <div class="stat-value" on:click={() => logValue(rocket.max_earth_distance)}>{rocket.max_earth_distance}</div>
   
           <div class="stat-icon">development cost</div>
-          <div class="stat-value" on:click={() => logValue('250')}>250</div>
+          <div class="stat-value" on:click={() => logValue(rocket.development_cost)}>{rocket.development_cost}</div>
   
           <div class="stat-icon">weight</div>
-          <div class="stat-value" on:click={() => logValue('773')}>773</div>
+          <div class="stat-value" on:click={() => logValue(rocket.weight)}>{rocket.weight}</div>
       </div>
   </div>
   

@@ -21,13 +21,26 @@
 
     $: {
         if ($selectedStat !== null) {
-            handleStatChange($selectedStat);
+            compareValues($selectedStat);
         }
     }
 
-    // Funktion, die aufgerufen wird, wenn sich selectedStat ändert
-    function handleStatChange(value) {
+    function compareValues(value) {
         console.log("selectedStat has changed to", value);
+        const stack1Value = stack1[$selectedStat];
+        const stack2Value = stack2[$selectedStat];
+
+        console.log("Stack 1 value", stack1Value);
+        console.log("Stack 2 value", stack2Value);
+
+        if (stack1Value > stack2Value) {
+            console.log("Player 1 wins!");
+        } else if (stack1Value < stack2Value) {
+            console.log("Player 2 wins!");
+        } else {
+            console.log("It's a tie!");
+        }
+
     }
 </script>
 
