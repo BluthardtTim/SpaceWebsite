@@ -1,5 +1,6 @@
 <script>
-import Header from "../components/Header.svelte";
+    import Card from "../components/Card.svelte";
+    import Header from "../components/Header.svelte";
 </script>
 
 <main>

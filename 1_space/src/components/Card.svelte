@@ -70,6 +70,7 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: 1fr 4fr 1fr 1fr 1fr 1fr;
+        gap: 5px;
     }
 
     .card-title {
@@ -91,7 +92,7 @@
     .rocket-info {
         grid-column: span 3;
     }
-    
+
     .stat-value:hover {
         background-color: rgb(224, 240, 255);
         cursor: pointer;
