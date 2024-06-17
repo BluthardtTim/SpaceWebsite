@@ -3,7 +3,6 @@
 
 <main>
     <div id="Wrapper">
-        <h1>Space</h1>
         <nav>
             <ul>
                 <li><a href="#/">Start</a></li>
@@ -16,10 +15,10 @@
 <style>
     #Wrapper {
         background-color: #e3e3e3;
-        padding: 10px;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
+        padding: 1rem;
     }
     nav ul {
         list-style-type: none;

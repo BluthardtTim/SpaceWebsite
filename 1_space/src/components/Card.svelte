@@ -2,6 +2,8 @@
     import { createEventDispatcher } from 'svelte';
     export let rocket;
     export let index;
+    export let stackNumber; 
+    export let isWinner = false;
 
     const dispatch = createEventDispatcher();
 
@@ -12,8 +14,11 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="card" style="transform: translateY({index * 2}px);">
+<div class="card {isWinner ? 'winner' : ''}" style="transform: translateY({index * 2}px);">
     <div class="card-content">
+        {#if stackNumber === 1}
+            <div id="backsite"><img src="../images/a1.jpg" alt=""></div>
+        {/if}
         <div class="card-number">{rocket.group_letter}{rocket.number}</div>
         <div class="card-title">
             <div class="card-name">{rocket.name}</div>
@@ -58,6 +63,11 @@
         border: solid 1px black;
     }
 
+    .card.winner {
+        border: solid 3px green;
+        background-color: rgb(224, 240, 255);
+        transform: scale(1.8);
+    }
     /* .card:hover {
         background-color: rgb(224, 240, 255);
         cursor: pointer;
@@ -71,6 +81,7 @@
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: 1fr 4fr 1fr 1fr 1fr 1fr;
         gap: 5px;
+        position: relative;
     }
 
     .card-title {
@@ -96,5 +107,16 @@
     .stat-value:hover {
         background-color: rgb(224, 240, 255);
         cursor: pointer;
+    }
+    
+    #backsite{
+        background-color: rgb(199, 228, 255);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        z-index: 1;
     }
 </style>
