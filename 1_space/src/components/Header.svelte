@@ -14,11 +14,11 @@
 
 <style>
     #Wrapper {
-        background-color: #e3e3e3;
         display: flex;
         justify-content: flex-end;
         align-items: center;
         padding: 1rem;
+        height: 10vh;
     }
     nav ul {
         list-style-type: none;

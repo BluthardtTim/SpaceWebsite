@@ -1,9 +1,11 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    import { decimalSeparators, shortenBigValue } from '../utils';
     export let rocket;
     export let index;
     export let stackNumber; 
     export let isWinner = false;
+    export let showBacksite;
 
     const dispatch = createEventDispatcher();
 
@@ -12,12 +14,13 @@
     }
 </script>
 
+
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="card {isWinner ? 'winner' : ''}" style="transform: translateY({index * 2}px);">
     <div class="card-content">
-        {#if stackNumber === 1}
-            <div id="backsite"><img src="../images/a1.jpg" alt=""></div>
+        {#if stackNumber === 1 && showBacksite}
+            <div id="backsite"><h3>Space <br>Quartet</h3></div>
         {/if}
         <div class="card-number">{rocket.group_letter}{rocket.number}</div>
         <div class="card-title">
@@ -26,7 +29,7 @@
         </div>
 
         <div class="rocket-image">
-            <img src="../images/a1.jpg" alt="{rocket.name}" />
+            <img src="rockets/{rocket.name}.jpg" alt="{rocket.name}" />
         </div>
         <div class="goal-icon">Goal</div>
         <div class="rocket-info">Solar system exploration</div>
@@ -35,19 +38,19 @@
         <div class="stat-value" on:click={() => logValue('year_built', rocket.year_built)}>{rocket.year_built}</div>
 
         <div class="stat-icon">mission duration</div>
-        <div class="stat-value" on:click={() => logValue('mission_duration', rocket.mission_duration)}>{rocket.mission_duration}</div>
+        <div class="stat-value" on:click={() => logValue('mission_duration', rocket.mission_duration)}>{decimalSeparators(rocket.mission_duration)}</div>
 
         <div class="stat-icon">max speed</div>
-        <div class="stat-value" on:click={() => logValue('max_speed', rocket.max_speed)}>{rocket.max_speed}</div>
+        <div class="stat-value" on:click={() => logValue('max_speed', rocket.max_speed)}>{decimalSeparators(rocket.max_speed)}</div>
 
         <div class="stat-icon">max earth distance</div>
-        <div class="stat-value" on:click={() => logValue('max_earth_distance', rocket.max_earth_distance)}>{rocket.max_earth_distance}</div>
+        <div class="stat-value" on:click={() => logValue('max_earth_distance', rocket.max_earth_distance)}>{decimalSeparators(shortenBigValue(rocket.max_earth_distance))}</div>
 
         <div class="stat-icon">development cost</div>
-        <div class="stat-value" on:click={() => logValue('development_cost', rocket.development_cost)}>{rocket.development_cost}</div>
+        <div class="stat-value" on:click={() => logValue('development_cost', rocket.development_cost)}>{decimalSeparators(rocket.development_cost)}</div>
 
         <div class="stat-icon">weight</div>
-        <div class="stat-value" on:click={() => logValue('weight', rocket.weight)}>{rocket.weight}</div>
+        <div class="stat-value" on:click={() => logValue('weight', rocket.weight)}>{decimalSeparators(shortenBigValue(rocket.weight))}</div>
     </div>
 </div>
 
@@ -57,7 +60,7 @@
         width: 325px;
         background-color: rgb(199, 228, 255);
         border-radius: 15px;
-        padding: 12px;
+        padding: 10px;
         color: #222;
         position: absolute;
         border: solid 1px black;
@@ -74,7 +77,7 @@
     } */
 
     .card-content {
-        border: 1px solid #222;
+        border: 1px solid #ffffff;
         height: 100%;
         border-radius: 10px;
         display: grid;
@@ -82,6 +85,7 @@
         grid-template-rows: 1fr 4fr 1fr 1fr 1fr 1fr;
         gap: 5px;
         position: relative;
+        padding: 5px;
     }
 
     .card-title {
@@ -118,5 +122,10 @@
         height: 100%;
         border-radius: 10px;
         z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 26px;
     }
 </style>

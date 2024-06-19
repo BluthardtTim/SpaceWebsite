@@ -13,6 +13,7 @@
     let winner = null; // Variable to keep track of the winner
     let winnerIndex = null; // Variable to keep track of the winner card index
     let playerTurn = 2; // Variable to keep track of the current player's turn (2 for human, 1 for computer)
+    let showBacksite = true;
 
     // Karten sortieren
     function shuffleArray(array) {
@@ -59,6 +60,8 @@
 
         console.log("Stack 1 value:", stack1Value);
         console.log("Stack 2 value:", stack2Value);
+
+        showBacksite = !showBacksite;
 
         if (stack1Value > stack2Value) {
             console.log("Player 1 wins!");
@@ -122,6 +125,9 @@
                     countPlayer1 -= 1;
                 }
             }
+
+            showBacksite = !showBacksite;
+
             // Reset the selected stat and winner
             selectedStat.set({ type: null, value: null, stack: null });
             winner = null;
@@ -164,51 +170,63 @@
 
 <main>
     <Header />
-
-    <div id="card-container">
-        <div class="stack">
-            <h3>Player 1 (Computer)</h3>
-            <h5>{countPlayer1} Cards</h5>
-            <h5>{valuePlayer1}</h5>
-            {#each $stack1 as rocket, index}
+    <div id="playground">
+        <div id="card-container">
+            <div class="stack">
+                <h3>Player 1 (Computer)</h3>
+                <h5>{countPlayer1} Cards</h5>
+                {#each $stack1 as rocket, index}
+                    <Card
+                        {rocket}
+                        {index}
+                        {showBacksite}
+                        stackNumber={1}
+                        isWinner={winner &&
+                            winner.winner === 1 &&
+                            index === winnerIndex}
+                    />
+                {/each}
+                <h5 class="valueStats">{valuePlayer1}</h5>
+            </div>
+                <button id="nextRound" on:click={handleNext}>next Round</button>
+            <div class="stack">
+                <h3>Player 2</h3>
+                <h5>{countPlayer2} Cards</h5>
+                {#each $stack2 as rocket, index}
                 <Card
-                    {rocket}
-                    {index}
-                    stackNumber={1}
-                    isWinner={winner &&
-                        winner.winner === 1 &&
-                        index === winnerIndex}
-                />
-            {/each}
+                {rocket}
+                {index}
+                {showBacksite}
+                stackNumber={2}
+                isWinner={winner &&
+                            winner.winner === 2 &&
+                            index === winnerIndex}
+                        on:cardClick={(e) =>
+                            handleCardClick(e.detail.rocket, 2, e.detail.type)}
+                    />
+                    {/each}
+                    <h5 class="valueStats">{valuePlayer2}</h5>
+            </div>
         </div>
-        <div class="stack">
-            <h3>Player 2</h3>
-            <h5>{countPlayer2} Cards</h5>
-            <h5>{valuePlayer2}</h5>
-            {#each $stack2 as rocket, index}
-                <Card
-                    {rocket}
-                    {index}
-                    stackNumber={2}
-                    isWinner={winner &&
-                        winner.winner === 2 &&
-                        index === winnerIndex}
-                    on:cardClick={(e) =>
-                        handleCardClick(e.detail.rocket, 2, e.detail.type)}
-                />
-            {/each}
-        </div>
-    </div>
-    <div id="controls">
-        <button on:click={handleNext}>Weiter</button>
+        
     </div>
 </main>
 
 <style>
+    #playground {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #F8F8F8;
+        height: 87vh;
+        margin: 15px;
+        border-radius: 32px;
+    }
     #card-container {
         display: flex;
         justify-content: center;
-        gap: 50px;
+        gap: 100px;
+        align-items: center;
     }
 
     .stack {
@@ -216,10 +234,18 @@
         width: 325px;
         height: 450px;
     }
-    #controls {
-        display: flex;
-        justify-content: center;
-        margin-top: 200px;
+    #nextRound {
+        transform: translateY(250px);
+        background-color: #323232;
+        color: white;
+        border: none;
+        border-radius: 100px;
+        padding: 10px 25px;
+        font-size: 1rem;
+        cursor: pointer;
     }
-    
+    .valueStats {
+        transform: translateY(500px);
+        font-size: 22px;
+    }
 </style>
