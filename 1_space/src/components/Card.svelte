@@ -22,15 +22,23 @@
         {#if stackNumber === 1 && showBacksite}
             <div id="backsite"><h3>Space <br>Quartet</h3></div>
         {/if}
-        <div class="card-number">{rocket.group_letter}{rocket.number}</div>
-        <div class="card-title">
-            <div class="card-name">{rocket.name}</div>
-            <div class="card-group">{rocket.group}</div>
-        </div>
+            <div class="card-number">{rocket.group_letter}{rocket.number}</div>
+            <div class="card-title">
+                <div class="card-name">{rocket.name}</div>
+                <div class="card-group">{rocket.group}</div>
+            </div>
 
         <div class="rocket-image">
             <img src="rockets/{rocket.name}.jpg" alt="{rocket.name}" />
         </div>
+
+        <div id="spacer"></div>
+        <div id="spacer"></div>
+        <div id="spacer"></div>
+        <div id="spacer"></div>
+
+        <div id="rocketstatsbackground"></div>
+
         <div class="goal-icon">Goal</div>
         <div class="rocket-info">Solar system exploration</div>
 
@@ -56,14 +64,13 @@
 
 <style>
     .card {
-        height: 450px;
-        width: 325px;
-        background-color: rgb(199, 228, 255);
+        height: 500px;
+        width: 360px;
+        /* background-color: rgb(199, 228, 255); */
         border-radius: 15px;
-        padding: 10px;
         color: #222;
         position: absolute;
-        border: solid 1px black;
+        /* border: solid 1px rgb(108, 108, 108); */
     }
 
     .card.winner {
@@ -79,29 +86,58 @@
     .card-content {
         border: 1px solid #ffffff;
         height: 100%;
-        border-radius: 10px;
+        border-radius: 15px;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: 1fr 4fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 5fr 1fr 1fr 1fr 1fr;
         gap: 5px;
         position: relative;
-        padding: 5px;
+        padding: 20px;
+    }
+
+    .card-number {
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
     }
 
     .card-title {
         grid-column: span 3;
+        color: white;
+    }
+
+    .card-name {
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .card-group {
+        font-size: 18px;
     }
 
     .rocket-image {
         grid-column: span 4;
         max-width: 100%;
         max-height: 170px;
+        position: absolute;
+        z-index: -2;
     }
 
     .rocket-image img {
         object-fit: cover;
         height: 100%;
         width: 100%;
+        border-radius: 15px 15px 0px 0px;
+    }
+
+    #rocketstatsbackground {
+        background-color: white;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 240px;
+        border-radius: 15px;
+        z-index: -1;
     }
 
     .rocket-info {
@@ -109,23 +145,24 @@
     }
 
     .stat-value:hover {
-        background-color: rgb(224, 240, 255);
+        background-color: rgb(242, 242, 255);
         cursor: pointer;
     }
     
     #backsite{
-        background-color: rgb(199, 228, 255);
+        background-color: rgb(42, 42, 75);
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        border-radius: 10px;
+        border-radius: 15px;
         z-index: 1;
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
         font-size: 26px;
+        color: white;
     }
 </style>

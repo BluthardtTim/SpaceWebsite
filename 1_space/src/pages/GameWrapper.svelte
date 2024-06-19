@@ -4,7 +4,7 @@
     import Data from "../data/data.js";
     import { stack1, stack2, selectedStat } from "../store.js";
     import { onMount } from "svelte";
-    import { get } from "svelte/store";
+    import { get } from "svelte/store"; 
 
     var countPlayer1 = 16;
     var countPlayer2 = 16;
@@ -233,6 +233,7 @@
         position: relative;
         width: 325px;
         height: 450px;
+        margin-top: 50px;
     }
     #nextRound {
         transform: translateY(250px);
@@ -245,7 +246,7 @@
         cursor: pointer;
     }
     .valueStats {
-        transform: translateY(500px);
+        transform: translateY(540px);
         font-size: 22px;
     }
 </style>
