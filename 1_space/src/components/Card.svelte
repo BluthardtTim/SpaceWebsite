@@ -34,22 +34,22 @@
         <div class="goal-icon">Goal</div>
         <div class="rocket-info">Solar system exploration</div>
 
-        <div class="stat-icon">year built</div>
+        <div class="stat-icon"><img src="icons/wrench.svg" alt=""/></div>
         <div class="stat-value" on:click={() => logValue('year_built', rocket.year_built)}>{rocket.year_built}</div>
 
-        <div class="stat-icon">mission duration</div>
+        <div class="stat-icon"><img src="icons/timer.svg" alt=""/></div>
         <div class="stat-value" on:click={() => logValue('mission_duration', rocket.mission_duration)}>{decimalSeparators(rocket.mission_duration)}</div>
 
-        <div class="stat-icon">max speed</div>
+        <div class="stat-icon"><img src="icons/speedometer.svg" alt=""/></div>
         <div class="stat-value" on:click={() => logValue('max_speed', rocket.max_speed)}>{decimalSeparators(rocket.max_speed)}</div>
 
-        <div class="stat-icon">max earth distance</div>
+        <div class="stat-icon"><img src="icons/ruler.svg" alt=""/></div>
         <div class="stat-value" on:click={() => logValue('max_earth_distance', rocket.max_earth_distance)}>{decimalSeparators(shortenBigValue(rocket.max_earth_distance))}</div>
 
-        <div class="stat-icon">development cost</div>
+        <div class="stat-icon"><img src="icons/coins.svg" alt=""/></div>
         <div class="stat-value" on:click={() => logValue('development_cost', rocket.development_cost)}>{decimalSeparators(rocket.development_cost)}</div>
 
-        <div class="stat-icon">weight</div>
+        <div class="stat-icon"><img src="icons/barbell.svg" alt=""/></div>
         <div class="stat-value" on:click={() => logValue('weight', rocket.weight)}>{decimalSeparators(shortenBigValue(rocket.weight))}</div>
     </div>
 </div>
