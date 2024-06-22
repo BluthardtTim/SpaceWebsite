@@ -14,6 +14,7 @@
     let winnerIndex = null; // Variable to keep track of the winner card index
     let playerTurn = 2; // Variable to keep track of the current player's turn (2 for human, 1 for computer)
     let showBacksite = true;
+    var centercontolls = "";
 
     // Karten sortieren
     function shuffleArray(array) {
@@ -58,6 +59,8 @@
             valuePlayer2 = stack2Value;
         }
 
+        
+
         console.log("Stack 1 value:", stack1Value);
         console.log("Stack 2 value:", stack2Value);
 
@@ -67,14 +70,17 @@
             console.log("Player 1 wins!");
             winner = { loserStack: stack2, winnerStack: stack1, winner: 1 };
             winnerIndex = stack1Data.length - 1;
+            centercontolls = "Computer got the point!";
         } else if (stack1Value < stack2Value) {
             console.log("Player 2 wins!");
             winner = { loserStack: stack1, winnerStack: stack2, winner: 2 };
             winnerIndex = stack2Data.length - 1;
+            centercontolls = "You got the point!";
         } else {
             console.log("It's a tie!");
             winner = { tie: true };
             winnerIndex = null;
+            centercontolls = "It's a tie!";
         }
     }
 
@@ -126,6 +132,7 @@
                 }
             }
 
+            centercontolls = "";
             showBacksite = !showBacksite;
 
             // Reset the selected stat and winner
@@ -173,7 +180,7 @@
     <div id="playground">
         <div id="card-container">
             <div class="stack">
-                <h3>Player 1 (Computer)</h3>
+                <h3 class="playerheading">Computer</h3>
                 <h5>{countPlayer1} Cards</h5>
                 {#each $stack1 as rocket, index}
                     <Card
@@ -184,13 +191,17 @@
                         isWinner={winner &&
                             winner.winner === 1 &&
                             index === winnerIndex}
+                            
                     />
                 {/each}
                 <h5 class="valueStats">{valuePlayer1}</h5>
             </div>
+            <div id="centercontolls">
+                <p id="pointmaster">{centercontolls}</p>
                 <button id="nextRound" on:click={handleNext}>next Round</button>
+            </div>
             <div class="stack">
-                <h3>Player 2</h3>
+                <h3 class="playerheading">You</h3>
                 <h5>{countPlayer2} Cards</h5>
                 {#each $stack2 as rocket, index}
                 <Card
@@ -233,10 +244,15 @@
         position: relative;
         width: 325px;
         height: 450px;
-        margin-top: 50px;
+        margin-top: 30px;
+    }
+    #centercontolls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     #nextRound {
-        transform: translateY(250px);
         background-color: #323232;
         color: white;
         border: none;
@@ -244,9 +260,20 @@
         padding: 10px 25px;
         font-size: 1rem;
         cursor: pointer;
+        position: absolute;
+        margin-top: 450px;
+    }
+    #pointmaster{
+        font-size: 22px;
+        width: 100px;
+        text-align: center;
+        margin-top: 300px;
     }
     .valueStats {
         transform: translateY(540px);
         font-size: 22px;
+    }
+    .playerheading {
+        font-size: 24px;
     }
 </style>

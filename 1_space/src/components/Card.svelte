@@ -12,6 +12,7 @@
     function logValue(type, value) {
         dispatch('cardClick', { type, rocket });
     }
+    
 </script>
 
 
@@ -40,7 +41,7 @@
         <div id="rocketstatsbackground"></div>
 
         <div class="goal-icon">Goal</div>
-        <div class="rocket-info">Solar system exploration</div>
+        <div class="rocket-info">{rocket.mission_goal}</div>
 
         <div class="stat-icon"><img src="icons/wrench.svg" alt=""/></div>
         <div class="stat-value" on:click={() => logValue('year_built', rocket.year_built)}>{rocket.year_built}</div>
@@ -76,12 +77,7 @@
     .card.winner {
         border: solid 3px green;
         background-color: rgb(224, 240, 255);
-        transform: scale(1.8);
     }
-    /* .card:hover {
-        background-color: rgb(224, 240, 255);
-        cursor: pointer;
-    } */
 
     .card-content {
         border: 1px solid #ffffff;
