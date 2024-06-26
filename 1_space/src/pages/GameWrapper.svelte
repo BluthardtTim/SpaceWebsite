@@ -1,7 +1,9 @@
 <script>
+
     import Header from "../components/Header.svelte";
     import Card from "../components/Card.svelte";
     import Data from "../data/data.js";
+    // @ts-ignore
     import { stack1, stack2, selectedStat } from "../store.js";
     import { onMount } from "svelte";
     import { get } from "svelte/store"; 
@@ -229,20 +231,21 @@
         flex-direction: column;
         align-items: center;
         background-color: #F8F8F8;
-        height: 87vh;
+        height: 86.9vh;
         margin: 15px;
         border-radius: 32px;
     }
     #card-container {
         display: flex;
         justify-content: center;
-        gap: 100px;
+        gap:80px;
         align-items: center;
+        width: 100%;
     }
 
     .stack {
         position: relative;
-        width: 325px;
+        width: 360px;
         height: 450px;
         margin-top: 30px;
     }
@@ -276,4 +279,15 @@
     .playerheading {
         font-size: 24px;
     }
+
+    @media (max-width: 940px) {
+        #card-container {
+            flex-direction: column;
+            gap: 50px;
+        }
+        #playground {
+            background-color: white;
+        }
+    }
+
 </style>

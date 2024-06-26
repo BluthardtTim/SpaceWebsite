@@ -1,61 +1,94 @@
 <script>
     import Header from "../components/Header.svelte";
+    import OpenAI from "openai";
+    let inputText = "";
+    let isLoading = false;
+    let responseText = "";
+    
+    const runPrompt = async () => {
+        const config = {
+            apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+            dangerouslyAllowBrowser: true, };
 
-//     import OpenAI from "openai";
+        const openai = new OpenAI(config);
 
-// const openai = new OpenAI();
+        try {
+            isLoading = true;
 
-// async function main() {
-//   const completion = await openai.chat.completions.create({
-//     messages: [{ role: "system", content: "You are a helpful assistant." }],
-//     model: "gpt-3.5-turbo",
-//   });
+            const prompt = `Return the name of a dinosaur that contains the word ${inputText} in a funny way.`;
+            const response = await openai.chat.completions.create({
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: prompt }],
+            });
 
-//   console.log(completion.choices[0]);
-// }
+            console.log("API-Response:", response);
+            responseText = response.choices[0].message.content;
+        } catch (error) {
+            // console.error("Error while retrieving the dinosaur name:", error);
+        } finally {
+            isLoading = false;
+        }
+    };
 </script>
 
 <main>
     <Header />
-    <img id="backgroundimg" src="images/background.png" alt="" />
+    <img id="backgroundimg" src="rockets/Venera 10.jpg" alt="" />
 
     <div id="wrapper">
         <img id="cardsimg" src="images/Cards.png" alt="" />
         <div id="infotext">
-            <p> Discover the most powerful rockets and satellites in our
+            <h1>Space Quartet</h1>
+            <p>
+                Discover the most powerful rockets and satellites in our
                 thrilling card game! Challenge the rocketmaster and dominate
                 space in categories like speed and mission duration – who will
                 be the ultimate champion?
-                </p>
+            </p>
             <button id="playbutton"><a href="#/game">Play Game</a></button>
         </div>
     </div>
+
+    <div class="input-controls">
+        <input
+            type="text"
+            bind:value={inputText}
+            placeholder="Enter random name or thing..."
+        />
+         <button on:click={runPrompt} disabled={isLoading}>Dinofy!</button>
+    </div>
+    {#if isLoading}
+        <p>Loading...</p>
+    {:else}
+        <p>Result after dinofication:</p>
+        <p class="result">{responseText}</p>
+    {/if}
 </main>
 
 <style>
     #backgroundimg {
         width: 100%;
-        height: 50vh;
+        height: 40vh;
         position: absolute;
         z-index: -1;
         object-fit: cover;
     }
 
     #wrapper {
-        /* display: flex;
+        display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center; */
+        align-items: center;
         display: grid;
         grid-template-columns: 2fr 3fr;
         gap: 50px;
-        margin: 200px 200px 100px 200px;
+        margin: 10rem;
     }
     #cardsimg {
         width: 100%;
     }
     #infotext {
-        margin-top: 300px;
+        margin-top: 150px;
     }
     #playbutton {
         background-color: rgb(42, 42, 75);
@@ -69,5 +102,19 @@
     #playbutton a {
         text-decoration: none;
         color: white;
+    }
+
+    @media (max-width: 940px) {
+        #wrapper {
+            grid-template-columns: 1fr;
+        }
+        #infotext {
+            margin-top: 0;
+        }
+    }
+    @media (max-width: 600px) {
+        #wrapper {
+            margin: 2rem;
+        }
     }
 </style>
