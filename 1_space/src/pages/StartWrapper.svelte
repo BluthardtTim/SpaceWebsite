@@ -1,34 +1,5 @@
 <script>
     import Header from "../components/Header.svelte";
-    import OpenAI from "openai";
-    let inputText = "";
-    let isLoading = false;
-    let responseText = "";
-    
-    const runPrompt = async () => {
-        const config = {
-            apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-            dangerouslyAllowBrowser: true, };
-
-        const openai = new OpenAI(config);
-
-        try {
-            isLoading = true;
-
-            const prompt = `Return the name of a dinosaur that contains the word ${inputText} in a funny way.`;
-            const response = await openai.chat.completions.create({
-                model: "gpt-3.5-turbo",
-                messages: [{ role: "user", content: prompt }],
-            });
-
-            console.log("API-Response:", response);
-            responseText = response.choices[0].message.content;
-        } catch (error) {
-            // console.error("Error while retrieving the dinosaur name:", error);
-        } finally {
-            isLoading = false;
-        }
-    };
 </script>
 
 <main>
@@ -49,20 +20,7 @@
         </div>
     </div>
 
-    <div class="input-controls">
-        <input
-            type="text"
-            bind:value={inputText}
-            placeholder="Enter random name or thing..."
-        />
-         <button on:click={runPrompt} disabled={isLoading}>Dinofy!</button>
-    </div>
-    {#if isLoading}
-        <p>Loading...</p>
-    {:else}
-        <p>Result after dinofication:</p>
-        <p class="result">{responseText}</p>
-    {/if}
+    
 </main>
 
 <style>

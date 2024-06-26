@@ -1,24 +1,25 @@
 <script>
-
     import Header from "../components/Header.svelte";
     import Card from "../components/Card.svelte";
     import Data from "../data/data.js";
-    // @ts-ignore
     import { stack1, stack2, selectedStat } from "../store.js";
     import { onMount } from "svelte";
-    import { get } from "svelte/store"; 
+    import { get } from "svelte/store";
+    import OpenAI from "openai";
+    
+    let isLoading = false;
+    let responseText = "";
 
     var countPlayer1 = 16;
     var countPlayer2 = 16;
     var valuePlayer1 = 0;
     var valuePlayer2 = 0;
-    let winner = null; // Variable to keep track of the winner
-    let winnerIndex = null; // Variable to keep track of the winner card index
-    let playerTurn = 2; // Variable to keep track of the current player's turn (2 for human, 1 for computer)
+    let winner = null;
+    let winnerIndex = null;
+    let playerTurn = 2;
     let showBacksite = true;
     var centercontolls = "";
 
-    // Karten sortieren
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -33,12 +34,10 @@
         stack1.set(shuffledData.slice(0, midIndex));
         stack2.set(shuffledData.slice(midIndex));
 
-        // Set initial turn to Player 2 (human)
         playerTurn = 2;
         console.log("Game started. Player 2's turn.");
     });
 
-    // Werte vergleichen
     $: if ($selectedStat.type && $selectedStat.value !== null) {
         compareValues($selectedStat);
     }
@@ -60,8 +59,6 @@
             valuePlayer1 = stack1Value;
             valuePlayer2 = stack2Value;
         }
-
-        
 
         console.log("Stack 1 value:", stack1Value);
         console.log("Stack 2 value:", stack2Value);
@@ -116,6 +113,7 @@
     function handleCardClick(rocket, stackNumber, type) {
         if (playerTurn === 2) {
             selectedStat.set({ type, value: rocket[type], stack: stackNumber });
+            runPrompt();
         }
     }
 
@@ -134,19 +132,17 @@
                 }
             }
 
+            responseText = "";
             centercontolls = "";
             showBacksite = !showBacksite;
 
-            // Reset the selected stat and winner
             selectedStat.set({ type: null, value: null, stack: null });
             winner = null;
             winnerIndex = null;
 
-            // Toggle player turn
             playerTurn = playerTurn === 2 ? 1 : 2;
             console.log(`Next turn: Player ${playerTurn}`);
 
-            // If it's the computer's turn, select a stat
             if (playerTurn === 1) {
                 setTimeout(() => computerSelectStat(), 1000);
             }
@@ -174,8 +170,48 @@
             stack: 1,
         });
         handleNext();
+        runPrompt();
     }
+
+    const runPrompt = async () => {
+        const config = {
+            apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+            dangerouslyAllowBrowser: true,
+        };
+
+        const openai = new OpenAI(config);
+
+        try {
+            isLoading = true;
+
+            const selectedStatValue = get(selectedStat);
+
+            let rocket;
+            if (selectedStatValue.stack === 1) {
+                const stack1Data = get(stack1);
+                rocket = stack1Data[stack1Data.length - 1];
+            } else {
+                const stack2Data = get(stack2);
+                rocket = stack2Data[stack2Data.length - 1];
+            }
+
+            const prompt = `Give me an interesting fact about the rocket "${rocket.name}" regarding its ${selectedStatValue.type}, which has a value of ${selectedStatValue.value}.`;
+            const response = await openai.chat.completions.create({
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: prompt }],
+            });
+            console.log(prompt);
+
+            console.log("API-Response:", response);
+            responseText = response.choices[0].message.content;
+        } catch (error) {
+            console.error("Error while retrieving the fact:", error);
+        } finally {
+            isLoading = false;
+        }
+    };
 </script>
+
 
 <main>
     <Header />
@@ -196,7 +232,7 @@
                             
                     />
                 {/each}
-                <h5 class="valueStats">{valuePlayer1}</h5>
+                <!-- <h5 class="valueStats">{valuePlayer1}</h5> -->
             </div>
             <div id="centercontolls">
                 <p id="pointmaster">{centercontolls}</p>
@@ -218,11 +254,25 @@
                             handleCardClick(e.detail.rocket, 2, e.detail.type)}
                     />
                     {/each}
-                    <h5 class="valueStats">{valuePlayer2}</h5>
+                    <!-- <h5 class="valueStats">{valuePlayer2}</h5> -->
             </div>
         </div>
         
+        <div id="extendedinformation">
+            <p>Interesting to know:</p>
+            {#if isLoading}
+                <p>Loading...</p>
+            {:else}
+                <p class="result">{responseText}</p>
+            {/if}
+        </div>
+
     </div>
+
+
+
+    
+    
 </main>
 
 <style>
@@ -233,7 +283,11 @@
         background-color: #F8F8F8;
         height: 86.9vh;
         margin: 15px;
-        border-radius: 32px;
+    }
+    #extendedinformation{
+        margin-top: 220px;
+        width: 50vw;
+        max-width: 800px;
     }
     #card-container {
         display: flex;
@@ -247,7 +301,6 @@
         position: relative;
         width: 360px;
         height: 450px;
-        margin-top: 30px;
     }
     #centercontolls {
         display: flex;

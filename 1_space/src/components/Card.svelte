@@ -126,6 +126,18 @@
         border-radius: 15px 15px 0px 0px;
     }
 
+    .stat-icon{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .stat-value{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 5px;
+    }
+
     #rocketstatsbackground {
         background-color: white;
         position: absolute;
