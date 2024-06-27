@@ -8,7 +8,7 @@
     import OpenAI from "openai";
     
     let isLoading = false;
-    let responseText = "";
+    let responseText = "klick a value to get a fact!";
 
     var countPlayer1 = 16;
     var countPlayer2 = 16;
@@ -132,7 +132,7 @@
                 }
             }
 
-            responseText = "";
+            responseText = "klick a value to get a fact!";
             centercontolls = "";
             showBacksite = !showBacksite;
 
@@ -195,7 +195,7 @@
                 rocket = stack2Data[stack2Data.length - 1];
             }
 
-            const prompt = `Give me an interesting fact about the rocket "${rocket.name}" regarding its ${selectedStatValue.type}, which has a value of ${selectedStatValue.value}.`;
+            const prompt = `Give me an interesting fact in one sentences about the rocket "${rocket.name}" regarding its ${selectedStatValue.type}, which has a value of ${selectedStatValue.value}.`;
             const response = await openai.chat.completions.create({
                 model: "gpt-3.5-turbo",
                 messages: [{ role: "user", content: prompt }],
@@ -259,7 +259,7 @@
         </div>
         
         <div id="extendedinformation">
-            <p>Interesting to know:</p>
+            <h3>Interesting to know:</h3>
             {#if isLoading}
                 <p>Loading...</p>
             {:else}
@@ -280,7 +280,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: #F8F8F8;
+        background-color: #ebebeb;
+        border-radius: 8px;
         height: 86.9vh;
         margin: 15px;
     }
@@ -288,6 +289,9 @@
         margin-top: 220px;
         width: 50vw;
         max-width: 800px;
+        /* border: solid black 0.1px; */
+        padding: 10px;
+        border-radius: 12px;
     }
     #card-container {
         display: flex;
@@ -324,10 +328,6 @@
         width: 100px;
         text-align: center;
         margin-top: 300px;
-    }
-    .valueStats {
-        transform: translateY(540px);
-        font-size: 22px;
     }
     .playerheading {
         font-size: 24px;
