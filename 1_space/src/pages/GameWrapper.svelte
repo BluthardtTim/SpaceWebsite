@@ -7,20 +7,20 @@
     import { stack1, stack2, selectedStat } from "../store.js";
     import OpenAI from "openai";
 
-    
     var countPlayer1 = 16;
     var countPlayer2 = 16;
     var valuePlayer1 = 0;
     var valuePlayer2 = 0;
     var centercontolls = "";
-    
+
     let isLoading = false;
     let responseText = "klick a value to get a fact!";
     let winner = null;
     let winnerIndex = null;
     let playerTurn = 2;
     let showBacksite = true;
-    let isSelected = false; 
+    let isSelected = false;
+    let gameOverMessage = "Space Quartet";
 
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -83,6 +83,36 @@
             winnerIndex = null;
             centercontolls = "It's a tie!";
         }
+
+        checkGameOver();
+    }
+
+    function checkGameOver() {
+        if (countPlayer1 <= 0) {
+            gameOverMessage = "Glückwunsch! Spieler 2 hat das Spiel gewonnen!";
+        } else if (countPlayer2 <= 0) {
+            gameOverMessage = "Der Computer hat das Spiel gewonnen!";
+        }
+    }
+
+    function restartGame() {
+        const shuffledData = shuffleArray(Data.slice());
+        const midIndex = Math.floor(shuffledData.length / 2);
+        stack1.set(shuffledData.slice(0, midIndex));
+        stack2.set(shuffledData.slice(midIndex));
+
+        countPlayer1 = 16;
+        countPlayer2 = 16;
+        valuePlayer1 = 0;
+        valuePlayer2 = 0;
+        winner = null;
+        winnerIndex = null;
+        playerTurn = 2;
+        showBacksite = true;
+        centercontolls = "";
+        gameOverMessage = "";
+
+        console.log("Game restarted. Player 2's turn.");
     }
 
     function moveCards(loserStack, winnerStack) {
@@ -113,7 +143,8 @@
     }
 
     function handleCardClick(rocket, stackNumber, type) {
-        if (playerTurn === 2 && !isSelected) { // Check if a selection has been made
+        if (playerTurn === 2 && !isSelected) {
+            // Check if a selection has been made
             selectedStat.set({ type, value: rocket[type], stack: stackNumber });
             isSelected = true; // Set the selection state to true
             runPrompt();
@@ -149,6 +180,10 @@
 
             if (playerTurn === 1) {
                 setTimeout(() => computerSelectStat(), 1000);
+            }
+
+            if (countPlayer1 <= 0 || countPlayer2 <= 0) {
+                checkGameOver();
             }
         }
     }
@@ -229,57 +264,68 @@
 
 <main>
     <Header />
-    <div id="playground">
-        <div id="card-container">
-            <div class="stack">
-                <h3 class="playerheading">Computer</h3>
-                <h5>{countPlayer1} Cards</h5>
-                {#each $stack1 as rocket, index}
-                    <Card
-                        {rocket}
-                        {index}
-                        {showBacksite}
-                        stackNumber={1}
-                        isWinner={winner &&
-                            winner.winner === 1 &&
-                            index === winnerIndex}
-                    />
-                {/each}
-                <!-- <h5 class="valueStats">{valuePlayer1}</h5> -->
-            </div>
-            <div id="centercontolls">
-                <p id="pointmaster">{centercontolls}</p>
-                <button id="nextRound" on:click={handleNext}>next Round</button>
-            </div>
-            <div class="stack">
-                <h3 class="playerheading">You</h3>
-                <h5>{countPlayer2} Cards</h5>
-                {#each $stack2 as rocket, index}
-                    <Card
-                        {rocket}
-                        {index}
-                        {showBacksite}
-                        stackNumber={2}
-                        isWinner={winner &&
-                            winner.winner === 2 &&
-                            index === winnerIndex}
-                        on:cardClick={(e) =>
-                            handleCardClick(e.detail.rocket, 2, e.detail.type)}
-                    />
-                {/each}
-                <!-- <h5 class="valueStats">{valuePlayer2}</h5> -->
-            </div>
+    {#if gameOverMessage}
+        <div id="gameOver">
+            <h2>{gameOverMessage}</h2>
+            <button on:click={restartGame}>start Game</button>
         </div>
+    {:else}
+        <div id="playground">
+            <div id="card-container">
+                <div class="stack">
+                    <h3 class="playerheading">Computer</h3>
+                    <h5>{countPlayer1} Karten</h5>
+                    {#each $stack1 as rocket, index}
+                        <Card
+                            {rocket}
+                            {index}
+                            {showBacksite}
+                            stackNumber={1}
+                            isWinner={winner &&
+                                winner.winner === 1 &&
+                                index === winnerIndex}
+                        />
+                    {/each}
+                </div>
+                <div id="centercontolls">
+                    <p id="pointmaster">{centercontolls}</p>
+                    <button id="nextRound" on:click={handleNext}
+                        >Nächste Runde</button
+                    >
+                </div>
+                <div class="stack">
+                    <h3 class="playerheading">Du</h3>
+                    <h5>{countPlayer2} Karten</h5>
+                    {#each $stack2 as rocket, index}
+                        <Card
+                            {rocket}
+                            {index}
+                            {showBacksite}
+                            stackNumber={2}
+                            isWinner={winner &&
+                                winner.winner === 2 &&
+                                index === winnerIndex}
+                            on:cardClick={(e) =>
+                                handleCardClick(
+                                    e.detail.rocket,
+                                    2,
+                                    e.detail.type,
+                                )}
+                        />
+                    {/each}
+                </div>
+            </div>
 
-        <div id="extendedinformation">
-            <h3>Interesting to know:</h3>
-            {#if isLoading}
-                <p>Loading...</p>
-            {:else}
-                <p class="result">{responseText}</p>
-            {/if}
+            <div id="extendedinformation">
+                <h3>Interessant zu wissen:</h3>
+                {#if isLoading}
+                    <p>Loading...</p>
+                {:else}
+                    <p class="result">{responseText}</p>
+                {/if}
+            </div>
         </div>
-    </div>
+    {/if}
 </main>
 
 <style>
@@ -339,6 +385,32 @@
     }
     .playerheading {
         font-size: 24px;
+    }
+
+    #gameOver {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #ebebeb;
+        border-radius: 8px;
+        height: 86.9vh;
+        margin: 15px;
+        text-align: center;
+    }
+    #gameOver h2 {
+        font-size: 2rem;
+        color: #323232;
+    }
+    #gameOver button {
+        background-color: #323232;
+        color: white;
+        border: none;
+        border-radius: 100px;
+        padding: 10px 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 20px;
     }
 
     @media (max-width: 940px) {

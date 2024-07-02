@@ -47,6 +47,7 @@
     }
     #infotext {
         margin-top: 150px;
+        margin-top: 300px;
     }
     #playbutton {
         background-color: rgb(42, 42, 75);
