@@ -2,23 +2,25 @@
     import Header from "../components/Header.svelte";
     import Card from "../components/Card.svelte";
     import Data from "../data/data.js";
-    import { stack1, stack2, selectedStat } from "../store.js";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
+    import { stack1, stack2, selectedStat } from "../store.js";
     import OpenAI from "openai";
-    
-    let isLoading = false;
-    let responseText = "klick a value to get a fact!";
 
+    
     var countPlayer1 = 16;
     var countPlayer2 = 16;
     var valuePlayer1 = 0;
     var valuePlayer2 = 0;
+    var centercontolls = "";
+    
+    let isLoading = false;
+    let responseText = "klick a value to get a fact!";
     let winner = null;
     let winnerIndex = null;
     let playerTurn = 2;
     let showBacksite = true;
-    var centercontolls = "";
+    let isSelected = false; 
 
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -111,8 +113,9 @@
     }
 
     function handleCardClick(rocket, stackNumber, type) {
-        if (playerTurn === 2) {
+        if (playerTurn === 2 && !isSelected) { // Check if a selection has been made
             selectedStat.set({ type, value: rocket[type], stack: stackNumber });
+            isSelected = true; // Set the selection state to true
             runPrompt();
         }
     }
@@ -139,6 +142,7 @@
             selectedStat.set({ type: null, value: null, stack: null });
             winner = null;
             winnerIndex = null;
+            isSelected = false; // Reset the selection state
 
             playerTurn = playerTurn === 2 ? 1 : 2;
             console.log(`Next turn: Player ${playerTurn}`);
@@ -161,12 +165,23 @@
             "development_cost",
             "weight",
         ];
-        const randomStat =
-            statTypes[Math.floor(Math.random() * statTypes.length)];
+
+        // Find the stat with the highest value
+        let maxStat = statTypes[0];
+        let maxValue = lastRocket[statTypes[0]];
+
+        for (let i = 1; i < statTypes.length; i++) {
+            const stat = statTypes[i];
+            const value = lastRocket[stat];
+            if (value > maxValue) {
+                maxStat = stat;
+                maxValue = value;
+            }
+        }
 
         selectedStat.set({
-            type: randomStat,
-            value: lastRocket[randomStat],
+            type: maxStat,
+            value: maxValue,
             stack: 1,
         });
         handleNext();
@@ -212,7 +227,6 @@
     };
 </script>
 
-
 <main>
     <Header />
     <div id="playground">
@@ -229,7 +243,6 @@
                         isWinner={winner &&
                             winner.winner === 1 &&
                             index === winnerIndex}
-                            
                     />
                 {/each}
                 <!-- <h5 class="valueStats">{valuePlayer1}</h5> -->
@@ -242,22 +255,22 @@
                 <h3 class="playerheading">You</h3>
                 <h5>{countPlayer2} Cards</h5>
                 {#each $stack2 as rocket, index}
-                <Card
-                {rocket}
-                {index}
-                {showBacksite}
-                stackNumber={2}
-                isWinner={winner &&
+                    <Card
+                        {rocket}
+                        {index}
+                        {showBacksite}
+                        stackNumber={2}
+                        isWinner={winner &&
                             winner.winner === 2 &&
                             index === winnerIndex}
                         on:cardClick={(e) =>
                             handleCardClick(e.detail.rocket, 2, e.detail.type)}
                     />
-                    {/each}
-                    <!-- <h5 class="valueStats">{valuePlayer2}</h5> -->
+                {/each}
+                <!-- <h5 class="valueStats">{valuePlayer2}</h5> -->
             </div>
         </div>
-        
+
         <div id="extendedinformation">
             <h3>Interesting to know:</h3>
             {#if isLoading}
@@ -266,13 +279,7 @@
                 <p class="result">{responseText}</p>
             {/if}
         </div>
-
     </div>
-
-
-
-    
-    
 </main>
 
 <style>
@@ -285,18 +292,19 @@
         height: 86.9vh;
         margin: 15px;
     }
-    #extendedinformation{
+    #extendedinformation {
         margin-top: 220px;
         width: 50vw;
         max-width: 800px;
         /* border: solid black 0.1px; */
         padding: 10px;
         border-radius: 12px;
+        text-align: center;
     }
     #card-container {
         display: flex;
         justify-content: center;
-        gap:80px;
+        gap: 80px;
         align-items: center;
         width: 100%;
     }
@@ -323,7 +331,7 @@
         position: absolute;
         margin-top: 450px;
     }
-    #pointmaster{
+    #pointmaster {
         font-size: 22px;
         width: 100px;
         text-align: center;
@@ -342,5 +350,4 @@
             background-color: white;
         }
     }
-
 </style>

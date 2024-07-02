@@ -1,12 +1,25 @@
 <script>
+    import { activeRoute } from '../store.js';
+    import { onMount } from 'svelte';
+
+    let currentRoute;
+    const unsubscribe = activeRoute.subscribe(value => {
+        currentRoute = value;
+    });
+
+    onMount(() => {
+        return () => {
+            unsubscribe();
+        };
+    });
 </script>
 
 <main>
     <div id="Wrapper">
         <nav>
             <ul>
-                <li><a href="#/">Start</a></li>
-                <li><a href="#/game">Game</a></li>
+                <li><a href="#/" class:active={currentRoute === '#/'}>Start</a></li>
+                <li><a href="#/game" class:active={currentRoute === '#/game'}>Game</a></li>
             </ul>
         </nav>
     </div>
@@ -34,5 +47,10 @@
     }
     nav ul li a:hover {
         color: rgb(0, 123, 255);
+    }
+    nav ul li a.active {
+        color: rgb(42, 42, 75);
+        text-decoration: underline;
+        text-underline-offset: 8px;
     }
 </style>

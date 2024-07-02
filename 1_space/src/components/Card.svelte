@@ -1,6 +1,8 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     import { decimalSeparators, shortenBigValue } from '../utils';
+    import { selectedStat } from "../store.js"; // Import the selectedStat store
+
     export let rocket;
     export let index;
     export let stackNumber; 
@@ -12,8 +14,8 @@
     function logValue(type, value) {
         dispatch('cardClick', { type, rocket });
     }
-    
 </script>
+
 
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -44,22 +46,22 @@
         <div class="rocket-info">{rocket.mission_goal}</div>
 
         <div class="stat-icon"><img src="icons/wrench.svg" alt=""/></div>
-        <div class="stat-value" on:click={() => logValue('year_built', rocket.year_built)}>{rocket.year_built}</div>
+        <div class="stat-value {($selectedStat.type === 'year_built' && $selectedStat.value === rocket.year_built) ? 'selected' : ''}" on:click={() => logValue('year_built', rocket.year_built)}>{rocket.year_built}</div>
 
         <div class="stat-icon"><img src="icons/timer.svg" alt=""/></div>
-        <div class="stat-value" on:click={() => logValue('mission_duration', rocket.mission_duration)}>{decimalSeparators(rocket.mission_duration)}</div>
+        <div class="stat-value {($selectedStat.type === 'mission_duration' && $selectedStat.value === rocket.mission_duration) ? 'selected' : ''}" on:click={() => logValue('mission_duration', rocket.mission_duration)}>{decimalSeparators(rocket.mission_duration)}</div>
 
         <div class="stat-icon"><img src="icons/speedometer.svg" alt=""/></div>
-        <div class="stat-value" on:click={() => logValue('max_speed', rocket.max_speed)}>{decimalSeparators(rocket.max_speed)}</div>
+        <div class="stat-value {($selectedStat.type === 'max_speed' && $selectedStat.value === rocket.max_speed) ? 'selected' : ''}" on:click={() => logValue('max_speed', rocket.max_speed)}>{decimalSeparators(rocket.max_speed)}</div>
 
         <div class="stat-icon"><img src="icons/ruler.svg" alt=""/></div>
-        <div class="stat-value" on:click={() => logValue('max_earth_distance', rocket.max_earth_distance)}>{decimalSeparators(shortenBigValue(rocket.max_earth_distance))}</div>
+        <div class="stat-value {($selectedStat.type === 'max_earth_distance' && $selectedStat.value === rocket.max_earth_distance) ? 'selected' : ''}" on:click={() => logValue('max_earth_distance', rocket.max_earth_distance)}>{decimalSeparators(shortenBigValue(rocket.max_earth_distance))}</div>
 
         <div class="stat-icon"><img src="icons/coins.svg" alt=""/></div>
-        <div class="stat-value" on:click={() => logValue('development_cost', rocket.development_cost)}>{decimalSeparators(rocket.development_cost)}</div>
+        <div class="stat-value {($selectedStat.type === 'development_cost' && $selectedStat.value === rocket.development_cost) ? 'selected' : ''}" on:click={() => logValue('development_cost', rocket.development_cost)}>{decimalSeparators(rocket.development_cost)}</div>
 
         <div class="stat-icon"><img src="icons/barbell.svg" alt=""/></div>
-        <div class="stat-value" on:click={() => logValue('weight', rocket.weight)}>{decimalSeparators(shortenBigValue(rocket.weight))}</div>
+        <div class="stat-value {($selectedStat.type === 'weight' && $selectedStat.value === rocket.weight) ? 'selected' : ''}" on:click={() => logValue('weight', rocket.weight)}>{decimalSeparators(shortenBigValue(rocket.weight))}</div>
     </div>
 </div>
 
@@ -67,11 +69,9 @@
     .card {
         height: 500px;
         width: 360px;
-        /* background-color: rgb(199, 228, 255); */
         border-radius: 15px;
         color: #222;
         position: absolute;
-        /* border: solid 1px rgb(108, 108, 108); */
     }
 
     .card.winner {
@@ -126,16 +126,21 @@
         border-radius: 15px 15px 0px 0px;
     }
 
-    .stat-icon{
+    .stat-icon {
         display: flex;
         align-items: center;
         justify-content: center;
     }
-    .stat-value{
+    .stat-value {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         padding: 5px;
+    }
+
+    .stat-value.selected {
+        background-color: rgb(42, 42, 75);
+        color: white;
     }
 
     #rocketstatsbackground {
@@ -154,10 +159,11 @@
 
     .stat-value:hover {
         background-color: rgb(242, 242, 255);
+        color: black;
         cursor: pointer;
     }
     
-    #backsite{
+    #backsite {
         background-color: rgb(42, 42, 75);
         position: absolute;
         top: 0;

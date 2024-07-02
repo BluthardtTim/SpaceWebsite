@@ -3,6 +3,7 @@
   import Router from "svelte-spa-router";
   import StartWrapper from "./pages/StartWrapper.svelte";
   import GameWrapper from "./pages/GameWrapper.svelte";
+  import { activeRoute } from './store.js';
 
 
   const routes = {
