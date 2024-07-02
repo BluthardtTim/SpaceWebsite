@@ -1,5 +1,6 @@
+<img src="1_space/public/rockets/Falcon 1.jpg" style="width: 100%; height: 10rem; object-fit: cover;">
+
 # Space Quartet Spiel
-### Übersicht
 Space Quartet ist ein interaktives Kartenspiel, das mit Svelte entwickelt wurde. Das Spiel beinhaltet ein Kartendeck, bei dem jede Karte eine Rakete mit verschiedenen Statistiken darstellt. Die Spieler wechseln sich ab, um eine Statistik von einer Karte auszuwählen, und der Spieler mit dem höheren Wert für die gewählte Statistik gewinnt die Runde. Das Spiel läuft weiter, bis alle Karten gespielt sind. Dieses Projekt nutzt die API von OpenAI, um interessante Fakten über die ausgewählten Raketen basierend auf den gewählten Statistiken zu generieren.
 
 ### Spielregeln
